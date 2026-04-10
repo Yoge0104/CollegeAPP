@@ -1,6 +1,13 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8080/api';
+// Get API base URL from Vite environment variables
+// Local development uses .env.development
+// Production build uses .env.production (or Vercel environment variables)
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api';
+
+if (import.meta.env.DEV) {
+  console.log('Development mode: API base URL is', API_BASE_URL);
+}
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -42,16 +49,18 @@ export const notesAPI = {
   getAll: () => api.get('/notes'),
   getBySubject: (subject) => api.get('/notes', { params: { subject } }),
   getById: (id) => api.get(`/notes/${id}`),
-  create: (data) => api.post('/notes', data, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  }),
+  create: (data) =>
+    api.post('/notes', data, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }),
   update: (id, data) => api.put(`/notes/${id}`, data),
   delete: (id) => api.delete(`/notes/${id}`),
-  download: (fileName) => api.get(`/notes/download/${fileName}`, {
-    responseType: 'blob'
-  }),
+  download: (fileName) =>
+    api.get(`/notes/download/${fileName}`, {
+      responseType: 'blob',
+    }),
 };
 
 // Doubts APIs
@@ -77,52 +86,27 @@ export const noticesAPI = {
   delete: (id) => api.delete(`/notices/${id}`),
 };
 
-
 // Attendance APIs
 export const attendanceAPI = {
-  // Faculty: Create session
   createSession: (data) => api.post('/attendance/session', data),
-
-  // Faculty: Close session
   closeSession: (id) => api.put(`/attendance/session/${id}/close`),
-
-  // Faculty: Get their sessions
-  getFacultySessions: (facultyId) => api.get(`/attendance/session/faculty/${facultyId}`),
-
-  // Faculty: Mark attendance
+  getFacultySessions: (facultyId) =>
+    api.get(`/attendance/session/faculty/${facultyId}`),
   markAttendance: (data) => api.post('/attendance/mark', data),
-
-  // Faculty: Bulk mark attendance
   markBulkAttendance: (data) => api.post('/attendance/mark/bulk', data),
-
-  // Faculty: Get students for a class
-  getStudentsByClass: (branch, year, section) => 
+  getStudentsByClass: (branch, year, section) =>
     api.get('/attendance/students', { params: { branch, year, section } }),
-
-  // Faculty: Bulk upload students
   uploadStudents: (data) => api.post('/attendance/students/upload', data),
-
-  // Faculty: Get session attendance list
-  getSessionAttendance: (sessionId) => api.get(`/attendance/session/${sessionId}/attendance`),
-
-  // Student: Get active sessions
+  getSessionAttendance: (sessionId) =>
+    api.get(`/attendance/session/${sessionId}/attendance`),
   getActiveSessions: (branch, year, section) =>
     api.get('/attendance/session/active', { params: { branch, year, section } }),
-
-  // Student: Get their attendance history
-  getStudentAttendance: (studentId) => api.get(`/attendance/student/${studentId}`),
-
-  // Student: Get their stats
-  getStudentStats: (studentId) => api.get(`/attendance/student/${studentId}/stats`),
-
-  // Get session details
+  getStudentAttendance: (studentId) =>
+    api.get(`/attendance/student/${studentId}`),
+  getStudentStats: (studentId) =>
+    api.get(`/attendance/student/${studentId}/stats`),
   getSession: (sessionId) => api.get(`/attendance/session/${sessionId}`),
-
-  // Get all active sessions
   getAllActiveSessions: () => api.get('/attendance/session/all/active'),
-
-
-
-  };
+};
 
 export default api;

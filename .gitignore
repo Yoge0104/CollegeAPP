@@ -1,4 +1,16 @@
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/.env
+frontend/.env.*
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+
 # Backend
+backend/uploads/
 backend/target/
 backend/.mvn/
 backend/mvnw
@@ -7,15 +19,6 @@ backend/.idea/
 backend/*.iml
 backend/*.iws
 backend/*.ipr
-
-# Frontend
-frontend/node_modules/
-frontend/dist/
-frontend/.vite/
-frontend/.env.local
-frontend/.env.development.local
-frontend/.env.test.local
-frontend/.env.production.local
 
 # IDE
 .vscode/
